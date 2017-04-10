@@ -235,8 +235,14 @@ function addHouseNumberAndStreet(vs) {
           }
         },
         {
-          match_phrase: {
-            'address_parts.street': vs.var('input:street').toString()
+          fuzzy: {
+            'address_parts.street': {
+				'value': vs.var('input:street').toString(),
+				"boost" :         1.0,
+				"fuzziness" :     2,
+				"prefix_length" : 3,
+				"max_expansions": 50
+			}
           }
         }
       ],
@@ -271,8 +277,14 @@ function addStreet(vs) {
       _name: 'fallback.street',
       must: [
         {
-          match_phrase: {
-            'address_parts.street': vs.var('input:street').toString()
+          fuzzy: {
+            'address_parts.street': {
+				'value': vs.var('input:street').toString(),
+				"boost" :         1.0,
+				"fuzziness" :     2,
+				"prefix_length" : 3,
+				"max_expansions": 50
+			}
           }
         }
       ],
