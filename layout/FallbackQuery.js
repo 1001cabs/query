@@ -91,8 +91,8 @@ function addPrimary(value, layer, fields, likely_to_have_abbreviation) {
 }
 
 // Secondary matches are for less granular administrative areas that have been
-// specified.  For example, in "Socorro, NM", "Socorro" is primary, whereas
-// "NM" is secondary.
+// specified.  For example, in 'Socorro, NM', 'Socorro' is primary, whereas
+// 'NM' is secondary.
 function addSecondary(value, fields) {
   return {
       multi_match: {
@@ -237,12 +237,12 @@ function addHouseNumberAndStreet(vs) {
         {
           fuzzy: {
             'address_parts.street': {
-				'value': vs.var('input:street').toString(),
-				"boost" :         1.0,
-				"fuzziness" :     2,
-				"prefix_length" : 3,
-				"max_expansions": 50
-			}
+              'value': vs.var('input:street').toString(),
+              'boost' :         1.0,
+              'fuzziness' :     2,
+              'prefix_length' : 3,
+              'max_expansions': 50
+            } 
           }
         }
       ],
@@ -279,12 +279,12 @@ function addStreet(vs) {
         {
           fuzzy: {
             'address_parts.street': {
-				'value': vs.var('input:street').toString(),
-				"boost" :         1.0,
-				"fuzziness" :     2,
-				"prefix_length" : 3,
-				"max_expansions": 50
-			}
+              'value': vs.var('input:street').toString(),
+              'boost' :         1.0,
+              'fuzziness' :     2,
+              'prefix_length' : 3,
+              'max_expansions': 50
+			      }
           }
         }
       ],
@@ -292,6 +292,55 @@ function addStreet(vs) {
       filter: {
         term: {
           layer: 'street'
+        }
+      }
+    }
+  };
+
+  if (vs.isset('boost:street')) {
+    o.bool.boost = vs.var('boost:street');
+  }
+
+  addSecPostCode(vs, o);
+  addSecNeighbourhood(vs, o);
+  addSecBorough(vs, o);
+  addSecLocality(vs, o);
+  addSecCounty(vs, o);
+  addSecRegion(vs, o);
+  addSecCountry(vs, o);
+
+  return o;
+
+}
+
+function addStreetWithFakeHouseNumber(vs) {
+  var o = {
+    bool: {
+      _name: 'fallback.streetaddress',
+      must: [
+        {
+          query: {
+            wildcard:{
+              'address_parts.number': '*'
+            }
+    	    }
+        },
+        {
+          fuzzy: {
+            'address_parts.street': {
+              'value': vs.var('input:street').toString(),
+              'boost' :         1.0,
+              'fuzziness' :     2,
+              'prefix_length' : 3,
+              'max_expansions': 50
+			      }
+          }
+        }
+      ],
+      should: [],
+      filter: {
+        terms: {
+          layer: ['address']
         }
       }
     }
@@ -516,6 +565,9 @@ Layout.prototype.render = function( vs ){
   }
   if (vs.isset('input:street')) {
     funcScoreShould.push(addStreet(vs));
+  }
+  if (vs.isset('input:housenumber') == false && vs.isset('input:street')) {
+    funcScoreShould.push(addStreetWithFakeHouseNumber(vs));
   }
   if (vs.isset('input:neighbourhood')) {
     funcScoreShould.push(addNeighbourhood(vs));
