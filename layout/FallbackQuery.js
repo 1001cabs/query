@@ -238,10 +238,10 @@ function addHouseNumberAndStreet(vs) {
           fuzzy: {
             'address_parts.street': {
               'value': vs.var('input:street').toString(),
-              'boost' :         1.0,
-              'fuzziness' :     2,
+              'boost' :         1,
+              'fuzziness' :     'AUTO',
               'prefix_length' : 3,
-              'max_expansions': 50
+              'max_expansions': 10
             } 
           }
         }
@@ -280,10 +280,10 @@ function addStreet(vs) {
           fuzzy: {
             'address_parts.street': {
               'value': vs.var('input:street').toString(),
-              'boost' :         1.0,
-              'fuzziness' :     2,
+              'boost' :         1,
+              'fuzziness' :     'AUTO',
               'prefix_length' : 3,
-              'max_expansions': 50
+              'max_expansions': 10
 			      }
           }
         }
@@ -329,10 +329,10 @@ function addStreetWithFakeHouseNumber(vs) {
           fuzzy: {
             'address_parts.street': {
               'value': vs.var('input:street').toString(),
-              'boost' :         1.0,
-              'fuzziness' :     2,
+              'boost' :         1,
+              'fuzziness' :     'AUTO',
               'prefix_length' : 3,
-              'max_expansions': 50
+              'max_expansions': 10
 			      }
           }
         }
