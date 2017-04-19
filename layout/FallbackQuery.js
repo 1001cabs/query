@@ -575,7 +575,7 @@ Layout.prototype.render = function( vs ){
   if (vs.isset('input:borough')) {
     funcScoreShould.push(addBorough(vs));
   }
-  if (vs.isset('input:locality')) {
+  if (vs.isset('input:street') == false && vs.isset('input:locality')) {
     funcScoreShould.push(addLocality(vs));
     funcScoreShould.push(addLocalAdmin(vs));
   }
