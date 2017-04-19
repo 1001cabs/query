@@ -339,8 +339,8 @@ function addStreetWithFakeHouseNumber(vs) {
       ],
       should: [],
       filter: {
-        terms: {
-          layer: ['address']
+        term: {
+          layer: 'address'
         }
       }
     }
