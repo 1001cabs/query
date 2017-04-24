@@ -304,7 +304,9 @@ function addStreet(vs) {
   addSecPostCode(vs, o);
   addSecNeighbourhood(vs, o);
   addSecBorough(vs, o);
-  addSecLocality(vs, o);
+  if (vs.var('input:street').toString() !== vs.var('input:locality').toString()){
+	addSecLocality(vs, o);  
+  };
   addSecCounty(vs, o);
   addSecRegion(vs, o);
   addSecCountry(vs, o);
