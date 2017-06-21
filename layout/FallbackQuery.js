@@ -32,6 +32,7 @@ var baseQuery = require('./baseQuery');
 function Layout(){
   this._score = [];
   this._filter = [];
+  this._sort = [];
 }
 
 Layout.prototype.score = function( view ){
@@ -41,6 +42,11 @@ Layout.prototype.score = function( view ){
 
 Layout.prototype.filter = function( view ){
   this._filter.push( view );
+  return this;
+};
+
+Layout.prototype.sort = function( view ){
+  this._sort.push( view );
   return this;
 };
 
@@ -613,7 +619,16 @@ Layout.prototype.render = function( vs ){
       }
     });
   }
-
+  
+  // handle sorting views under 'sort'
+  if( this._sort.length ){
+    this._sort.forEach( function( view ){
+      var rendered = view( vs );
+      if( rendered ){
+        q.sort.push( rendered );
+      }
+    });
+  }
   return q;
 };
 
